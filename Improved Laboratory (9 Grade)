@@ -1,0 +1,22 @@
+import pickle
+class SaveManager:
+    @staticmethod
+    def save_state(university):
+        with open("university_state.pkl", "wb") as file:
+            pickle.dump(university, file)
+    @staticmethod
+    def load_state():
+        try:
+            with open("university_state.pkl", "rb") as file:
+                return pickle.load(file)
+        except FileNotFoundError:
+            return University()
+class University:
+    def __init__(self):
+        self.faculties = []
+def main():
+    tum = SaveManager.load_state()
+    while True:
+        SaveManager.save_state(tum)
+if __name__ == "__main__":
+    main()
