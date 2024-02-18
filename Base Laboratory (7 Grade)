@@ -1,0 +1,46 @@
+from datetime import date
+
+class Student:
+    def __init__(self, first_name, last_name, email, enrollment_date, date_of_birth):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.enrollment_date = enrollment_date
+        self.date_of_birth = date_of_birth
+
+class StudyField:
+    MECHANICAL_ENGINEERING = 1
+    SOFTWARE_ENGINEERING = 2
+    FOOD_TECHNOLOGY = 3
+    URBANISM_ARCHITECTURE = 4
+    VETERINARY_MEDICINE = 5
+
+class Faculty:
+    def __init__(self, name, abbreviation, study_field):
+        self.name = name
+        self.abbreviation = abbreviation
+        self.students = []
+        self.study_field = study_field
+
+    def add_student(self, student):
+        self.students.append(student)
+
+    def remove_student(self, student):
+        self.students.remove(student)
+
+    def list_students(self):
+        return self.students
+
+
+if __name__ == "__main__":
+    student1 = Student("Jony", "Doe", "jony.doe@example.com", date(2023, 9, 1), date(2002, 5, 15))
+    student2 = Student("Alina", "Smith", "alice.smith@example.com", date(2023, 9, 1), date(2001, 8, 22))
+
+    faculty_se = Faculty("Facultatea de Inginerie Software", "SEF", StudyField.SOFTWARE_ENGINEERING)
+    faculty_se.add_student(student1)
+    faculty_se.add_student(student2)
+
+    print("Studenți la Facultatea de Inginerie Software:")
+    for student in faculty_se.list_students():
+        print(f"{student.first_name} {student.last_name}")
+        
