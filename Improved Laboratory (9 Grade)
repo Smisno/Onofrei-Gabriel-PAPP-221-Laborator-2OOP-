@@ -1,22 +1,71 @@
 import pickle
+
+class Student:
+    def __init__(self, first_name, last_name, email, enrollment_date, date_of_birth):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.enrollment_date = enrollment_date
+        self.date_of_birth = date_of_birth
+
+class Faculty:
+    def __init__(self, name, abbreviation, students, study_field):
+        self.name = name
+        self.abbreviation = abbreviation
+        self.students = students
+        self.study_field = study_field
+
+class StudyField:
+    MECHANICAL_ENGINEERING = 1
+    SOFTWARE_ENGINEERING = 2
+    FOOD_TECHNOLOGY = 3
+    URBANISM_ARCHITECTURE = 4
+    VETERINARY_MEDICINE = 5
+
 class SaveManager:
     @staticmethod
-    def save_state(university):
-        with open("university_state.pkl", "wb") as file:
-            pickle.dump(university, file)
-    @staticmethod
-    def load_state():
+    def save_state(students, faculties, file_name):
         try:
-            with open("university_state.pkl", "rb") as file:
-                return pickle.load(file)
-        except FileNotFoundError:
-            return University()
-class University:
-    def __init__(self):
-        self.faculties = []
-def main():
-    tum = SaveManager.load_state()
-    while True:
-        SaveManager.save_state(tum)
+            with open(file_name, 'wb') as file:
+                pickle.dump(students, file)
+                pickle.dump(faculties, file)
+            print("State saved successfully.")
+        except Exception as e:
+            print("Error saving state:", str(e))
+
+    @staticmethod
+    def load_state(file_name):
+        students = []
+        faculties = []
+        try:
+            with open(file_name, 'rb') as file:
+                students = pickle.load(file)
+                faculties = pickle.load(file)
+            print("State loaded successfully.")
+        except Exception as e:
+            print("Error loading state:", str(e))
+        return students, faculties
+
+
 if __name__ == "__main__":
-    main()
+    students = [Student("John", "Doe", "john.doe@example.com", "2023-01-01", "2000-01-01")]
+    faculties = [Faculty("Engineering", "ENG", ["john.doe@example.com"], StudyField.MECHANICAL_ENGINEERING)]
+
+    # Save state
+    SaveManager.save_state(students, faculties, "state.pkl")
+    
+    # Clear existing data
+    students.clear()
+    faculties.clear()
+    
+    # Load state
+    students, faculties = SaveManager.load_state("state.pkl")
+
+    # Print loaded data for verification
+    print("Students:")
+    for student in students:
+        print(student.first_name, student.last_name, student.email)
+    
+    print("\nFaculties:")
+    for faculty in faculties:
+        print(faculty.name, faculty.abbreviation, faculty.students, faculty.study_field)
