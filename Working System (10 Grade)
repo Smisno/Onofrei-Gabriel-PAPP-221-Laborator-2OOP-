@@ -1,0 +1,52 @@
+import datetime
+
+class OperationLogger:
+    def __init__(self, log_file):
+        self.log_file = log_file
+
+    def log_operation(self, operation, details=None):
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_entry = f"{timestamp} - {operation}"
+        if details:
+            log_entry += f" - {details}"
+        with open(self.log_file, "a") as file:
+            file.write(log_entry + "\n")
+
+    def log_error(self, error_message):
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        error_entry = f"{timestamp} - ERROR: {error_message}"
+        with open(self.log_file, "a") as file:
+            file.write(error_entry + "\n")
+
+    def batch_enrollment(self, file_path):
+        try:
+            with open(file_path, "r") as file:
+                for line in file:
+                    # Process each line to enroll students
+                    # Example: student_id, course_id, etc.
+                    # Perform enrollment operation
+                    self.log_operation("Batch Enrollment", line.strip())
+        except FileNotFoundError:
+            self.log_error(f"Batch Enrollment Error: File '{file_path}' not found.")
+        except Exception as e:
+            self.log_error(f"Batch Enrollment Error: {str(e)}")
+
+    def batch_graduation(self, file_path):
+        try:
+            with open(file_path, "r") as file:
+                for line in file:
+                    # Process each line to graduate students
+                    # Example: student_id, graduation_date, etc.
+                    # Perform graduation operation
+                    self.log_operation("Batch Graduation", line.strip())
+        except FileNotFoundError:
+            self.log_error(f"Batch Graduation Error: File '{file_path}' not found.")
+        except Exception as e:
+            self.log_error(f"Batch Graduation Error: {str(e)}")
+
+# Example usage:
+logger = OperationLogger("operation.log")
+logger.log_operation("Student Creation", "Student ID: 123")
+logger.log_operation("Faculty Creation", "Faculty ID: 456")
+logger.batch_enrollment("enrollment.txt")
+logger.batch_graduation("graduation.txt")
